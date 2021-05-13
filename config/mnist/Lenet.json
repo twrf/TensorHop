@@ -1,0 +1,118 @@
+{
+    "Net":
+    {
+        "name":"Lenet",
+        "batch":100,
+        "normalize":2,
+        "baseLearningRate":0.01,
+        "testIter":100
+    },
+
+    "Layer":[
+        {
+            "type":"Input",
+            "name":"mnist",
+            "sharp":{
+                // WHCN or WHN or WN, last is N, all the sharps should be calculated by UI tools in future
+                "output":[28, 28, 1, 1],
+                "label":[1, 1]
+            },"param":{
+                "scale":0.00390625, // =1/256
+                "source_data":"./data/mnist/train-images-idx3-ubyte",
+                "source_label":"./data/mnist/train-labels-idx1-ubyte"
+            }
+        },
+        {
+            "type":"Convolution",
+            "name":"conv1",
+            "sharp":{
+                "input":[{"mnist":"output"}],
+                "filter":[5, 5, 20, 1],
+//                "bias":[],
+                "output":[24, 24, 20, 1]
+            },"param":{
+                "stride":1,
+                "weight_filler":"xavier",
+                "bias_filler":"constant"
+            }
+        },
+        {
+            "type":"Pooling",
+            "name":"pl1",
+            "sharp":{
+                "input":["conv1"],
+                "output":[12, 12, 20, 1]
+            },"param":{
+                "type":"max",
+                "kernel":2,
+                "stride":2
+            }
+        },
+        {
+            "type":"Convolution",
+            "name":"conv2",
+            "sharp":{
+                "input":["pl1"],
+                "filter":[5, 5, 50, 1],
+                "output":[8, 8, 50, 1]
+            },"param":{
+                "stride":1,
+                "weight_filler":"xavier",
+                "bias_filler":"constant"
+            }
+        },
+        {
+            "type":"Pooling",
+            "name":"pl2",
+            "sharp":{
+                "input":["conv2"],
+                "output":[4, 4, 50, 1]
+            },"param":{
+                "type":"max",
+                "kernel":2,
+                "stride":2
+            }
+        },
+        {
+            "type":"InnerProduct",
+            "name":"ip1",
+            "sharp":{
+                "input":["pl2"],
+                "filter":[500, 800, 1, 1],
+                "output":[500, 1],
+                "actice":"Relu"
+            },"param":{
+                "weight_filler":"xavier",
+                "bias_filler":"constant"
+            }
+        },
+        {
+            "type":"Relu",
+            "name":"relu1",
+            "sharp":{
+                "input":["ip1"],
+                "output":[500, 1]
+            }
+        },
+        {
+            "type":"InnerProduct",
+            "name":"ip2",
+            "sharp":{
+                "input":["relu1"],
+                "filter":[10, 500, 1, 1],
+                "output":[10, 1]
+            },"param":{
+                "weight_filler":"xavier",
+                "bias_filler":"constant"
+            }
+        },
+        {
+            "type":"SoftmaxWithLoss",
+            "name":"loss",
+            "sharp":{
+                "input":["ip2"],
+                "label":[{"mnist":"label"}]
+            }
+        }
+    ]
+}
