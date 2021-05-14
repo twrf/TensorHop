@@ -27,7 +27,7 @@
 #define WHITE           7
 
 static const int s_logColor[] = {0, MAGENTA, RED, YELLOW, GREEN, CYAN, WHITE};
-static const char* s_logTag[] = {"\0", "fatal", "error", "warn ", "info ", "trace", "debug"};
+static const char* s_logTag[] = {"\0", "fatal", "error", "warn", "info", "trace", "debug"};
 static LogLevel s_level = logLevelInfo;
 
 int logFilter(int level, const char* module, const char* file, const char* func, int line,
@@ -52,8 +52,10 @@ int logFilter(int level, const char* module, const char* file, const char* func,
     {
         filename = filename.substr(pos + 1);
     }
-    snprintf(buffer, BUFFER_MAX_LEN-1, "\x1b[%d;%dm%02d:%02d:%02d.%06ld| %s %s:%d, ",
-             1, 30+s_logColor[level], t.tm_hour, t.tm_min, t.tm_sec, tv.tv_usec,
+    snprintf(buffer, BUFFER_MAX_LEN-1, "\x1b[%d;%dm[%04d-%02d-%02d %02d:%02d:%02d.%06ld] [%s] [%s:%d] ",
+             1, 30+s_logColor[level],
+             t.tm_year+1900, t.tm_mon+1, t.tm_mday,
+             t.tm_hour, t.tm_min, t.tm_sec, tv.tv_usec,
              s_logTag[level], filename.c_str(), line);
     bufferLen += strlen(buffer + bufferLen);
     va_list args;

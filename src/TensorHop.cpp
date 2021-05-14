@@ -37,6 +37,7 @@ int main()
     signal(SIGABRT, SystemErrorHandler);
     setPrintLevel(logLevelDebug);
 
+    setPrintLevel(logLevelInfo);
     std::shared_ptr<CNet> net(new CNet("./config/mnist/Lenet.json"));
 
     return 0;
