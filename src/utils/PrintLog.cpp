@@ -52,9 +52,9 @@ int logFilter(int level, const char* module, const char* file, const char* func,
     {
         filename = filename.substr(pos + 1);
     }
-    snprintf(buffer, BUFFER_MAX_LEN-1, "\x1b[%d;%dm%02d:%02d:%02d.%06ld|[%s-%s] %s %s:%s():%d, ",
+    snprintf(buffer, BUFFER_MAX_LEN-1, "\x1b[%d;%dm%02d:%02d:%02d.%06ld| %s %s:%s():%d, ",
              1, 30+s_logColor[level], t.tm_hour, t.tm_min, t.tm_sec, tv.tv_usec,
-             module, version, s_logTag[level], filename.c_str(), func, line);
+             s_logTag[level], filename.c_str(), func, line);
     bufferLen += strlen(buffer + bufferLen);
     va_list args;
     va_start(args, fmt);
