@@ -1,3 +1,5 @@
 /release/
+/doc/
+/data/*
 .DS_Store
 *.o

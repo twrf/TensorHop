@@ -1,11 +1,9 @@
 #include "Net.hpp"
 #include <fstream>
 
-CNet::CNet(const std::string file)
+CNet::CNet(const std::string file) :
+    m_root(praseNetJson(file))
 {
-    m_root = Json::Value::null;
-    praseNetJson(file, m_root);
-
     // check net json
 
     // finetune net json
@@ -17,8 +15,9 @@ CNet::CNet(const std::string file)
     infof("finish config layers\n");
 }
 
-bool CNet::praseNetJson(const std::string &file, CConfigTable &root)
+CConfigTable CNet::praseNetJson(const std::string &file)
 {
+    CConfigTable root;
     std::string filename = file;
     Json::Reader reader;
     std::ifstream in(filename, std::ios::in | std::ios::binary);
@@ -26,7 +25,7 @@ bool CNet::praseNetJson(const std::string &file, CConfigTable &root)
     {
         errorf("Open %s failed\n", filename.c_str());
         ASSERT(0);
-        return false;
+        return Json::Value::null;
     }
 
     infof("Open %s succed\n", filename.c_str());
@@ -39,10 +38,10 @@ bool CNet::praseNetJson(const std::string &file, CConfigTable &root)
     {
         errorf("Prase %s failed\n", filename.c_str());
         ASSERT(0);
-        return false;
+        return Json::Value::null;
     }
 
-    return true;
+    return root;
 }
 
 bool CNet::createLayers(const CConfigTable &layers)

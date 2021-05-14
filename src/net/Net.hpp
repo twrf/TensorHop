@@ -13,7 +13,7 @@ public:
     CNet(const std::string file);
 
 private:
-    bool praseNetJson(const std::string& file, CConfigTable& root);
+    CConfigTable praseNetJson(const std::string& file);
     bool createLayers(const CConfigTable& layers);
 
     std::shared_ptr<CLayerInterface> createLayer(const CConfigTable& cfg);
@@ -25,7 +25,7 @@ private:
     }
 
 private:
-    CConfigTable m_root = Json::Value::null;
+    const CConfigTable m_root = Json::Value::null;
 
 //    CMutex m_mutexLayers; // both for map and list
     std::map<std::string, std::shared_ptr<CLayerInterface>> m_layersMap;
